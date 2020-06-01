@@ -3,12 +3,16 @@
       xmlns:th="http://www.thymeleaf.org" xmlns:form="http://www.w3.org/1999/html">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Connection error</title>
 </head>
 <body>
-<H1>YOU DO NOT HAVE ENOUGH RIGHTS</H1>
-<form action="" th:action="@{/}" method="GET">
-    <input type="submit" value="GO TO LOGIN PAGE"/>
+<!--<H1>YOU DO NOT HAVE ENOUGH RIGHTS</H1>-->
+<H1>Ooops! No connection to server.</H1>
+<h2>Try one more or contact server's admin (e-mail: admin@server.com)</h2>
+<form action="" th:action="@{/}" method="get">
+    <button type="submit">
+         Try again
+    </button>
 </form>
 </body>
 </html>

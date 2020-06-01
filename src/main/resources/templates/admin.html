@@ -61,7 +61,7 @@
         <a href="#" class="navbar-brand" style="color: lightgray">NameProject</a>
     </div>
     <form class="form-inline my-2 my-lg-0">
-        <button type="button" class="btn btn-link"><a href="/logout" style="color: lightgray">Logout</a>
+        <button type="button" class="btn btn-link"><a href="/" style="color: lightgray">Logout</a>
         </button>
     </form>
 </nav>
@@ -79,7 +79,7 @@
                 <a href="/admin" class="list-group-item list-group-item-action list-group-item-light">Admin</a>
                 <!--на основе ролей показываем/скрываем страницы-->
                 <div sec:authorize access="hasRole('ROLE_USER')">
-                    <a href="/user" class="list-group-item list-group-item-action list-group-item-light">User</a>
+                    <a href="/user" class="list-group-item list-group-item-action list-group-item-light" id="go-to-userPage">User</a>
                 </div>
             </div>
         </div>
@@ -93,7 +93,7 @@
                 <!--навигация таблица всех юзеров/форма добавления нового юзера-->
                 <nav>
                     <div class="nav nav-tabs" id="nav-tab" role="tablist">
-                        <a class="nav-item nav-link active" id="nav-allusers-tab" data-toggle="tab" href="#nav-home"
+                        <a class="nav-item nav-link active" id="nav-allUsers-tab" data-toggle="tab" href="#nav-home"
                            role="tab" aria-controls="nav-home" aria-selected="true">User table</a>
                         <a class="nav-item nav-link" id="nav-adduser-tab" data-toggle="tab" href="#nav-profile"
                            role="tab" aria-controls="nav-profile" aria-selected="false">New user</a>
@@ -103,7 +103,7 @@
 
                     <!--таблица всех юзеров-->
                     <div class="tab-pane fade show active" id="nav-home" role="tabpanel"
-                         aria-labelledby="nav-allusers-tab">
+                         aria-labelledby="nav-allUsers-tab">
                         <div class="text-left pl-3 h-100" style="background-color: #F2F2F2">
                             <tr class="table-secondary"><p class="font-weight-bold">All users</p></tr>
                         </div>
@@ -168,7 +168,7 @@
                                         </div>
                                         <div class="form-group">
                                             <div class="col-md-12 center-block text-center">
-                                                <label class="col-form-lable">
+                                                <label class="col-form-label">
                                                     <p class="font-weight-bold">Roles: </p>
                                                 </label>
                                                 <div class="col-md-12 center-block text-center" id="edit-all-roles">
@@ -258,14 +258,14 @@
         crossorigin="anonymous">
 </script>
 
-<!--<script src="/../../js/main.js"></script>-->
 <script src="/../../js/addUser.js"></script>
 <script src="/../../js/deleteUser.js"></script>
 <script src="/../../js/editUser.js"></script>
-<script src="/../../js/getAllRolesForAdd.js"></script>
-<script src="/../../js/getAllRolesForModal.js"></script>
-<script src="/../../js/getAllUsers.js"></script>
+<script src="/../../js/getAllRolesForAdd(new).js"></script>
+<script src="/../../js/getAllRolesForModal(new).js"></script>
+<script src="/../../js/getAllUsers(new).js"></script>
 <script src="/../../js/getCheckedRoles.js"></script>
+<script src="/../../js/goToUserPage.js"></script>
 
 </body>
 </html>

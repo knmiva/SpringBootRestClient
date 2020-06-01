@@ -1,11 +1,10 @@
 package com.example.demo.controller;
 
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
@@ -22,10 +21,10 @@ public class AppController {
             if (roles.contains("ROLE_ADMIN")) {
                 return "admin";
             } else {
-                return "error";
+                return "error403";
             }
-        } catch (Exception e) {
-            return "error";
+        } catch (HttpClientErrorException e) {
+            return "error403";
         }
     }
 
@@ -37,10 +36,10 @@ public class AppController {
             if (roles.contains("ROLE_USER")) {
                 return "user";
             } else {
-                return "error";
+                return "error403";
             }
-        } catch (Exception e) {
-            return "error";
+        } catch (HttpClientErrorException e) {
+            return "error403";
         }
     }
 

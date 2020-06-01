@@ -1,4 +1,319 @@
 <!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+
+    <title>User's page</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+</head>
+<body>
+<style>
+    /*растягиваем на весь экран*/
+    html, body {
+        height: 100%;
+        overflow: hidden;
+    }
+
+    #left {
+        height: 100%;
+        background: #F5F5F5;
+    }
+
+    #right {
+        height: 100%;
+        background: #E7EAED;
+    }
+
+    #warningAddUsername {
+        color: red;
+    }
+
+    #warningAddPassword {
+        color: red;
+    }
+
+    #warningAddRoles {
+        color: red;
+    }
+
+    #warningEditUsername {
+        color: red;
+    }
+
+    #warningEditRoles {
+        color: red;
+    }
+</style>
+
+<!--<input type="hidden" name="token" th:value="${session.token}"/>-->
+
+<!--navbar-->
+<nav class="navbar navbar-default" style="background-color: #303030">
+    <div class="navbar-header">
+        <a href="#" class="navbar-brand" style="color: lightgray">NameProject</a>
+    </div>
+    <form class="form-inline my-2 my-lg-0">
+        <button type="button" class="btn btn-link"><a href="/" style="color: lightgray">Logout</a>
+        </button>
+    </form>
+</nav>
+
+<!--страница-->
+<div class="container-fluid h-100">
+    <div class="row justify-content-left h-100">
+
+        <!--меню слева-->
+        <div class="col-3 hidden-md-down pl-0 pr-0" id="left">
+            <br>
+
+            <!--лист-->
+            <!--<div class="list-group">
+                <div th:sec:authorize access="hasRole('ROLE_ADMIN')">
+                    <a href="/admin" class="list-group-item list-group-item-action list-group-item-light">Admin</a>
+                </div>
+                &lt;!&ndash;на основе ролей показываем/скрываем страницы&ndash;&gt;
+                <div th:sec:authorize access="hasRole('ROLE_USER')">
+                    <a href="/user" class="list-group-item list-group-item-action list-group-item-primary">User</a>
+                </div>
+            </div>-->
+        </div>
+
+        <!--основной контент справа-->
+        <div class="col-9 hidden-md-down pl-3 pr-3" id="right">
+            <p class="text-left">
+            <h1>Welcome to user's page</h1></p>
+            <div align="center">
+
+
+                <!--<div class="tab-content" style="background-color: white" id="nav-tabContent">
+
+                    &lt;!&ndash;таблица всех юзеров&ndash;&gt;
+                    <div class="tab-pane fade show active" id="nav-home" role="tabpanel"
+                         aria-labelledby="nav-allusers-tab">
+                        <div class="text-left pl-3 h-100" style="background-color: #F2F2F2">
+                            <tr class="table-secondary"><p class="font-weight-bold">All users</p></tr>
+                        </div>
+                        <table class="table table-striped">
+                            <thead>
+                            <tr>
+                                <th scope="col">ID</th>
+                                <th scope="col">Username</th>
+                                <th scope="col">Roles</th>
+                                <th scope="col">Edit</th>
+                                <th scope="col">Delete</th>
+                            </tr>
+                            </thead>
+                            <tbody id="users-table">
+                            &lt;!&ndash;см. ajax запрос&ndash;&gt;
+                            </tbody>
+                        </table>
+                    </div>
+
+                    &lt;!&ndash;модалка&ndash;&gt;
+                    <div class="modal fade bd-example-modal-md" id="exampleModal" tabindex="-1" role="dialog"
+                         aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-md" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="modal-title">Edit user: </h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <form>
+                                        <div class="form-group">
+                                            &lt;!&ndash;скрыл id чтобы передать в js&ndash;&gt;
+                                            <input type="hidden" id="modal-hidden-id" name="id">
+                                            <div class="col-md-8 center-block text-center">
+                                                <label for="modalEditId" class="col-form-label">
+                                                    <p class="font-weight-bold">ID: </p>
+                                                </label>
+                                                <input type="text" class="form-control" id="modalEditId" disabled>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-md-8 center-block text-center">
+                                                <label for="modalEditUsername" class="col-form-label">
+                                                    <p class="font-weight-bold">Username: </p>
+                                                </label>
+                                                <input type="text" class="form-control" id="modalEditUsername"
+                                                       required="required">
+                                            </div>
+                                        </div>
+                                        <span id="warningEditUsername"></span>
+                                        <br>
+                                        <div class="form-group">
+                                            <div class="col-md-8 center-block text-center">
+                                                <label for="modalEditNewPassword" class="col-form-label">
+                                                    <p class="font-weight-bold">Password: </p>
+                                                </label>
+                                                <input type="text" class="form-control" id="modalEditNewPassword"
+                                                       placeholder="New password">
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-md-12 center-block text-center">
+                                                <label class="col-form-lable">
+                                                    <p class="font-weight-bold">Roles: </p>
+                                                </label>
+                                                <div class="col-md-12 center-block text-center" id="edit-all-roles">
+                                                    &lt;!&ndash;см. ajax запрос&ndash;&gt;
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <span id="warningEditRoles"></span>
+                                        <br>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close
+                                            </button>
+                                            <button type="button" id="btnSaveEdit" class="btn btn-primary">Save</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    &lt;!&ndash;форма добавления нового юзера&ndash;&gt;
+                    <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-adduser-tab">
+                        <div class="container-fluid text-left pl-3" style="background-color: #F2F2F2">
+                            <tr class="table-secondary"><p class="font-weight-bold">Add new user</p></tr>
+                        </div>
+                        <br>
+                        <form id="formAdd">
+                            <div class="col">
+                                <label for="inputAddUsername" class="col-sm-2 col-form-label">
+                                    <a class="font-weight-bold">Username: </a>
+                                </label>
+                                <div class="col-sm-4">
+                                    <input type="text" class="form-control" id="inputAddUsername" placeholder="Username"
+                                           size="40">
+                                </div>
+                            </div>
+                            <span id="warningAddUsername"></span>
+                            <br>
+                            <div class="col">
+                                <label for="inputAddPassword" class="col-sm-2 col-form-label">
+                                    <p class="font-weight-bold">Password: </p>
+                                </label>
+                                <div class="col-sm-4">
+                                    <input type="password" class="form-control" id="inputAddPassword"
+                                           placeholder="Password" size="40">
+                                </div>
+                            </div>
+                            <span id="warningAddPassword"></span>
+                            <br>
+                            <div class="col">
+                                <div class="col-sm-2">
+                                    <p class="font-weight-bold">Roles: </p>
+                                </div>
+                                <div class="col-sm-10" id="add-all-roles">
+                                    &lt;!&ndash;см. ajax&ndash;&gt;
+                                </div>
+                            </div>
+                            <span id="warningAddRoles"></span>
+                            <br><br>
+                            <div class="form-group">
+                                <div class="col-sm-10">
+                                    <button type="button" id="btnAddUser" class="btn btn-success">Add new user
+                                    </button>
+                                </div>
+                                <br>
+                            </div>
+                        </form>
+                    </div>
+                </div>-->
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Подключаю jQuery CDN с Ajax -->
+<!--<script
+        src="https://code.jquery.com/jquery-3.4.1.js"
+        integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU="
+        crossorigin="anonymous">
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+        crossorigin="anonymous">
+</script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+        crossorigin="anonymous">
+</script>-->
+
+<!--<script src="/../../js/main.js"></script>-->
+<!--<script src="/../../js/addUser.js"></script>
+<script src="/../../js/deleteUser.js"></script>
+<script src="/../../js/editUser.js"></script>
+<script src="/../../js/getAllRolesForAddOld.js"></script>
+<script src="/../../js/getAllRolesForModal(old).js"></script>
+<script src="/../../js/getAllUsers(old).js"></script>
+<script src="/../../js/getCheckedRoles.js"></script>-->
+
+</body>
+<!--</html><!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Add User</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+          crossorigin="anonymous">
+    <link rel="stylesheet"
+          href="https://use.fontawesome.com/releases/v5.4.1/css/all.css"
+          integrity="sha384-5sAR7xN1Nv6T6+dT2mhtzEpVJvfS3NScPQTrOxhwjIuvcA67KV2R5Jz6kr4abQsz"
+          crossorigin="anonymous">
+</head>
+<body style="background-color: #092756">
+<div class="container-fluid" style="background-color: #4a4a4a">
+    <form action="/logout" method="post" class="text-right">
+        <input type="submit" class="btn btn-link" value="Logout">
+    </form>
+</div>
+<div class="container-fluid" style="background-color: #ededed">
+    <div class="row">
+        <div class="col-2">
+            <div>
+                <a href="/admin" class="btn btn-link"><i>Admin</i></a>
+            </div>
+            <div>
+                <a href="/user" class="btn btn-link"><i>User</i></a>
+            </div>
+        </div>
+
+        <div class="col-10" style="background-color: #e3e3e3"><i class="fas ml-5"><h2><strong>User page</strong></h2>
+        </i>
+
+        </div>
+
+    </div>
+</div>
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+        crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+        crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+        crossorigin="anonymous"></script>
+</body>
+</html>-->
+
+<!--<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -6,9 +321,12 @@
 </head>
 <body>
 <h1>User</h1>
-<a href="/home">Home</a>
+<h2>
+    Welcome to user's page
+</h2>
+&lt;!&ndash;<a href="/home">Home</a>&ndash;&gt;
 <a href="/logout">Logout</a>
 
 </body>
-</html>
+</html>-->
 

@@ -1,6 +1,6 @@
 function editUser(id) {
     $.ajax({
-        url: 'http://localhost:8080/rest/admin/editUser/' + id,
+        url: `http://localhost:8080/rest/admin/editUser/${id}`,
         headers: {
             'Authorization':token,
             'Accept': 'application/json',
@@ -11,15 +11,14 @@ function editUser(id) {
         contentType: 'application/json; charset=utf-8',
 
         success: function (editData) {
-            $('#modal-title').text('Edit user: ' + editData.username);
+            $('#modal-title').text(`Edit user: ${editData.username}`);
             $('#modalEditId').val(editData.id);
             $('#modalEditUsername').val(editData.username);
-            var emptyPassword = '';
+            let emptyPassword = '';
             $('#modalEditNewPassword').val(emptyPassword);
-            var editUserString = JSON.stringify(editData);
+            let editUserString = JSON.stringify(editData);
             $('#edit-all-roles').empty();
             getAllRolesForModal(editUserString);
-            console.log("editUser")
         },
         error: function (error) {
             alert(error);
@@ -33,7 +32,7 @@ $('#btnSaveEdit').click(function () {
     } else if (($('input[type="checkbox"]:checked')).length < 1) {
         $('#warningEditRoles').text("Roles not valid").show().fadeOut(2000);
     } else {
-        var editUser = {};
+        let editUser = {};
         editUser.id = $('#modalEditId').val();
         editUser.username = $('#modalEditUsername').val();
         editUser.password = $('#modalEditNewPassword').val();
@@ -49,7 +48,7 @@ $('#btnSaveEdit').click(function () {
             data: JSON.stringify(editUser),
             contentType: 'application/json; charset=utf-8',
             success: function () {
-                var table = $('#users-table');
+                let table = $('#users-table');
                 table.empty();
                 $('#exampleModal').modal('hide');
                 $('#nav-allusers-tab').tab('show');

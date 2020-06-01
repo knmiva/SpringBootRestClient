@@ -12,7 +12,7 @@ $('#btnAddUser').click(function () {
     } else if ($('input[type="checkbox"]:checked').length < 1) {
         $('#warningAddRoles').text("Roles not valid").show().fadeOut(2000);
     } else {
-        var addUser = {};
+        let addUser = {};
         addUser.username = $('#inputAddUsername').val();
         addUser.password = $('#inputAddPassword').val();
         addUser.roles = getCheckedRoles();
@@ -27,9 +27,9 @@ $('#btnAddUser').click(function () {
             data: JSON.stringify(addUser),
             contentType: 'application/json; charset=utf-8',
             success: function () {
-                var table = $('#users-table');
+                let table = $('#users-table');
                 table.empty();
-                $('#nav-allusers-tab').tab('show');
+                $('#nav-allUsers-tab').tab('show');
                 getAllUsers();
                 $('#inputAddUsername').val('');
                 $('#inputAddPassword').val('');

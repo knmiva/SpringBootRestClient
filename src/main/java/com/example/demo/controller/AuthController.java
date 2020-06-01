@@ -9,6 +9,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.RestTemplate;
 
 import javax.servlet.http.HttpServletRequest;
@@ -21,7 +22,7 @@ public class AuthController {
 
     @Autowired
     public AuthController(@Value("http://localhost:8080/rest/auth/login") String restServerLogin,
-                          @Value("Bearer_") String startingWord) {
+                          @Value("Bearer_") String startingWord) throws HttpClientErrorException, HttpServerErrorException {
         this.restServerLogin = restServerLogin;
         this.startingWord = startingWord;
     }
@@ -39,7 +40,9 @@ public class AuthController {
         RestTemplate restTemplate = new RestTemplate();
         HttpEntity<AuthenticationRequestDto> userHttpEntity = new HttpEntity<>(authenticationRequestDto, httpHeaders);
         HttpSession httpSession = req.getSession();
+        System.out.println("go");
         try {
+            System.out.println("try");
             ResponseEntity<DtoResponseUser> result = restTemplate.exchange(
                     restServerLogin,
                     HttpMethod.POST,
@@ -52,14 +55,17 @@ public class AuthController {
             httpSession.setAttribute("token", userDtoFromBody.getToken());
             System.out.println("token " + userDtoFromBody.getToken());
             httpSession.setAttribute("roles", userDtoFromBody.getRoles());
-            if (userDtoFromBody.getRoles().contains("ADMIN")) {
+            if (userDtoFromBody.getRoles().contains("ROLE_ADMIN")) {
                 return "redirect:/admin";
             } else {
                 return "redirect:/user";
             }
-        } catch (HttpClientErrorException e) {
-            System.out.println("ОШИБКА!!!");
-            return "redirect:/error";
+        } catch (HttpClientErrorException httpClientErrorException) {
+            System.out.println("ОШИБКА АВТОРИЗАЦИИ!!!");
+            return "error403";
+        } catch (HttpServerErrorException httpServerErrorException) {
+            System.out.println("ОШИБКА НА СЕРВЕРЕ !!!");
+            return "error";
         }
     }
 }

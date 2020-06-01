@@ -1,6 +1,6 @@
 function deleteUser(id) {
     $.ajax({
-        url: 'http://localhost:8080/rest/admin/deleteUser/' + id,
+        url: `http://localhost:8080/rest/admin/deleteUser/${id}`,
         headers: {
             'Authorization':token,
             'Accept': 'application/json',
@@ -9,7 +9,7 @@ function deleteUser(id) {
         method: 'DELETE',
         contentType: 'application/json; charset=utf-8',
         success: function () {
-            var table = $('#users-table');
+            let table = $('#users-table');
             table.empty();
             getAllUsers();
         },

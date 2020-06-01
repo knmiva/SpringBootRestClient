@@ -1,7 +1,7 @@
 function getCheckedRoles() {
-    var roles = [];
+    let roles = [];
     $.each($('input[type="checkbox"]:checked'), function () {
-        var role = {};
+        let role = {};
         role.id = $(this).attr('id');
         role.role = $(this).attr('value');
         roles.push(role);
